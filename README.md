@@ -1,7 +1,14 @@
 # 📊 AI 价值投资分析助手 (StockAgent)
 
 一个基于 Streamlit 的 A股股票价值投资分析工具，集成 DeepSeek AI、akshare 数据源和多维度估值模型。
+## 🖼️ 界面演示（以“贵州茅台”为例）
 
+![Step 1 - 输入与财务摘要](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step1.png)
+![Step 2 - 核心指标与AI报告开头](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step2.png)
+![Step 3 - 多维度估值与趋势分析](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step3.png)
+![Step 4 - 风险与投资建议](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step4.png)
+
+> 💡 报告包含：核心量化指标、四大估值模型对比、利弗莫尔趋势信号、股息策略分析、三大风险提示、明确操作建议。
 ## 🚀 快速开始
 
 ### 1. 安装依赖
