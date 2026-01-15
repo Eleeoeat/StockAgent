@@ -30,6 +30,15 @@ api_key = st.sidebar.text_input(
     value=default_api_key,
     type="password"
 )
+
+# 模型选择
+selected_model = st.sidebar.selectbox(
+    "选择 AI 模型",
+    ["deepseek-chat", "deepseek-reasoner"],
+    index=0,
+    help="💡 deepseek-chat (V3): 快速响应，适合快速分析\n🧠 deepseek-reasoner (R1): 深度推理，适合复杂决策"
+)
+
 base_url = "https://api.deepseek.com"
 
 # ============================================================================
@@ -240,7 +249,7 @@ def estimate_by_peg_model(current_pe, growth_rate=10):
 # ============================================================================
 
 def call_deepseek_agent(api_key, stock_name, data_string, current_date, current_price, 
-                        current_pe, current_change_pct, price_range_data, dividend_data, valuation_models):
+                        current_pe, current_change_pct, price_range_data, dividend_data, valuation_models, ai_model="deepseek-chat"):
     """调用 DeepSeek 进行 AI 分析"""
     client = OpenAI(api_key=api_key, base_url=base_url)
     
@@ -307,7 +316,7 @@ def call_deepseek_agent(api_key, stock_name, data_string, current_date, current_
     """
     
     response = client.chat.completions.create(
-        model="deepseek-chat",
+        model=ai_model,
         messages=[
             {"role": "system", "content": "你是硬核资深投研专家，数据驱动、逻辑严谨。"},
             {"role": "user", "content": prompt},
@@ -396,16 +405,17 @@ if st.button("开始深度分析"):
                 full_content = ""
                 
                 response_stream = call_deepseek_agent(
-                    api_key,
-                    target_name,
-                    core_data_for_ai,
-                    current_date,
-                    current_price,
-                    current_pe,
-                    current_change_pct,
-                    price_range_data,
-                    dividend_data,
-                    valuation_models
+                    api_key=api_key,
+                    stock_name=target_name,
+                    data_string=core_data_for_ai,
+                    current_date=current_date,
+                    current_price=current_price,
+                    current_pe=current_pe,
+                    current_change_pct=current_change_pct,
+                    price_range_data=price_range_data,
+                    dividend_data=dividend_data,
+                    valuation_models=valuation_models,
+                    ai_model=selected_model
                 )
                 
                 for chunk in response_stream:

@@ -25,18 +25,36 @@ pip install -r requirements.txt
 ### 2. 配置 API Key
 
 **推荐方式：创建 .env 文件（自动识别）** ⭐
-1. 复制 `.env.example` 并重命名为 `.env`
-2. 填入你的 DeepSeek API Key：
+
+#### 如何创建 .env 文件
+
+**方法一：使用 PowerShell（推荐）**
+```powershell
+# 在项目文件夹打开 PowerShell，运行：
+Copy-Item .env.example .env
+```
+
+**方法二：手动创建**
+1. 找到项目文件夹中的 `.env.example` 文件
+2. 复制该文件
+3. 将复制的文件重命名为 `.env`（注意：文件名就是 `.env`，没有任何后缀）
+
+#### 填写 API Key
+
+1. 用文本编辑器（记事本、VS Code 等）打开 `.env` 文件
+2. 将 `sk-your-api-key-here` 替换为你的真实 API Key：
    ```
-   DEEPSEEK_API_KEY=sk-your-api-key-here
+   DEEPSEEK_API_KEY=sk-你的真实API-Key
    ```
 3. 保存文件
-4. 启动应用后，API Key 会自动填充到侧边栏
+
+#### 获取 API Key
+访问 [DeepSeek 官网](https://www.deepseek.com) 注册并获取 API Key
 
 **备选方式：手动输入**
 - 如果没有 `.env` 文件，启动应用后在侧边栏直接输入 API Key
 
-**获取 API Key**：访问 [DeepSeek 官网](https://www.deepseek.com) 注册并获取
+⚠️ **注意**：`.env` 文件包含敏感信息，已添加到 `.gitignore`，不会被上传到 GitHub
 
 ### 3. 运行应用
 
@@ -50,6 +68,11 @@ streamlit run app_v2_enhanced.py
 ```
 
 ## 📊 核心功能
+
+### AI 模型选择
+- **DeepSeek-Chat (V3)** - 快速响应，适合日常快速分析
+- **DeepSeek-Reasoner (R1)** - 深度推理，适合复杂投资决策
+- 可在侧边栏自由切换
 
 ### 数据获取
 - **近一年价格范围** - 52周最高/最低价（用于 Livermore 趋势分析）
@@ -81,9 +104,14 @@ streamlit run app_v2_enhanced.py
 | `.gitignore` | Git 忽略规则 |
 | `README.md` | 本文件 |
 
-## ⚙️ 最近修复
+## ⚙️ 最近更新
 
-### v2.0.1 (2026-01-16)
+### v2.1.0 (2026-01-16) - 新增功能
+- ✨ **新增 AI 模型切换功能**
+  - 支持 DeepSeek-Chat (V3) 和 DeepSeek-Reasoner (R1) 切换
+  - 可根据分析需求选择快速响应或深度推理模式
+
+### v2.0.1 (2026-01-16) - Bug 修复
 - ✅ 修复近一年价格范围获取失败（中文列名编码问题）
   - 改用位置索引 `iloc[:, 2]`（最高价）和 `iloc[:, 3]`（最低价）
 - ✅ 修复 None 值格式化错误
