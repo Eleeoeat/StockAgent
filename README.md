@@ -2,15 +2,35 @@
 
 一个基于 Streamlit 的 A股股票价值投资分析工具，集成 DeepSeek AI、akshare 数据源和多维度估值模型。
 
-## 🚀 快速开始
+## �️ 界面演示（以"贵州茅台"为例）
+
+![Step 1 - 输入与财务摘要](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step1.png)
+![Step 2 - 核心指标与AI报告开头](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step2.png)
+![Step 3 - 多维度估值与趋势分析](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step3.png)
+![Step 4 - 风险与投资建议](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step4.png)
+
+> 💡 报告包含：核心量化指标、四大估值模型对比、利弗莫尔趋势信号、股息策略分析、三大风险提示、明确操作建议。
+
+## �🚀 快速开始
+
+### 前置要求
+- **Python 3.8+** （推荐 3.10 或更高版本）
+- **pip** 或 **conda** 包管理器
 
 ### 1. 安装依赖
 ```bash
-pip install streamlit akshare openai pandas numpy
+pip install -r requirements.txt
 ```
 
-### 2. 获取 API Key
-- 访问 [DeepSeek 官网](https://www.deepseek.com) 获取 API Key
+### 2. 配置 API Key
+1. 复制 `.env.example` 并重命名为 `.env`
+2. 填入你的 DeepSeek API Key：
+   ```
+   DEEPSEEK_API_KEY=sk-your-api-key-here
+   ```
+3. 保存文件
+
+或者在应用启动后，直接在侧边栏输入 API Key
 
 ### 3. 运行应用
 
