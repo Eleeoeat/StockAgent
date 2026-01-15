@@ -10,6 +10,11 @@ from openai import OpenAI
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
+import os
+from dotenv import load_dotenv
+
+# 加载 .env 文件中的环境变量
+load_dotenv()
 
 # 1. 网页标题与基础配置
 st.set_page_config(page_title="AI 价值投资分析助手", layout="wide")
@@ -17,7 +22,14 @@ st.title("📊 A股价值投资 AI 分析助手")
 
 # 2. 侧边栏：配置 DeepSeek
 st.sidebar.header("⚙️ 配置中心")
-api_key = st.sidebar.text_input("请输入 DeepSeek API Key", type="password")
+
+# 先尝试从 .env 文件读取，如果没有则从侧边栏输入
+default_api_key = os.getenv("DEEPSEEK_API_KEY", "")
+api_key = st.sidebar.text_input(
+    "请输入 DeepSeek API Key",
+    value=default_api_key,
+    type="password"
+)
 base_url = "https://api.deepseek.com"
 
 # ============================================================================

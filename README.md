@@ -23,14 +23,20 @@ pip install -r requirements.txt
 ```
 
 ### 2. 配置 API Key
+
+**推荐方式：创建 .env 文件（自动识别）** ⭐
 1. 复制 `.env.example` 并重命名为 `.env`
 2. 填入你的 DeepSeek API Key：
    ```
    DEEPSEEK_API_KEY=sk-your-api-key-here
    ```
 3. 保存文件
+4. 启动应用后，API Key 会自动填充到侧边栏
 
-或者在应用启动后，直接在侧边栏输入 API Key
+**备选方式：手动输入**
+- 如果没有 `.env` 文件，启动应用后在侧边栏直接输入 API Key
+
+**获取 API Key**：访问 [DeepSeek 官网](https://www.deepseek.com) 注册并获取
 
 ### 3. 运行应用
 
@@ -69,6 +75,10 @@ streamlit run app_v2_enhanced.py
 | `run.py` | ⭐ 通用启动脚本（双击打开） |
 | `app_v2_enhanced.py` | 主应用程序 |
 | `test_data_fetch.py` | 数据源验证工具 |
+| `requirements.txt` | Python 依赖列表 |
+| `.env.example` | API Key 配置模板 |
+| `.env` | 本地环境变量（需自己创建，不上传） |
+| `.gitignore` | Git 忽略规则 |
 | `README.md` | 本文件 |
 
 ## ⚙️ 最近修复
