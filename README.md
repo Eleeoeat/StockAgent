@@ -2,7 +2,7 @@
 
 一个基于 Streamlit 的 A股股票价值投资分析工具，集成 DeepSeek AI、akshare 数据源和多维度估值模型。
 
-## �️ 界面演示（以"贵州茅台"为例）
+## 🖼️ 界面演示（以"贵州茅台"为例）
 
 ![Step 1 - 输入与财务摘要](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step1.png)
 ![Step 2 - 核心指标与AI报告开头](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step2.png)
@@ -11,7 +11,7 @@
 
 > 💡 报告包含：核心量化指标、四大估值模型对比、利弗莫尔趋势信号、股息策略分析、三大风险提示、明确操作建议。
 
-## �🚀 快速开始
+## 🚀 快速开始
 
 ### 前置要求
 - **Python 3.8+** （推荐 3.10 或更高版本）
