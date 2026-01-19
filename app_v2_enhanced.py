@@ -393,6 +393,7 @@ def call_deepseek_agent(api_key, stock_name, data_string, current_date, current_
             {"role": "system", "content": "你是硬核资深投研专家，数据驱动、逻辑严谨。"},
             {"role": "user", "content": prompt},
         ],
+        temperature=0.3,  # 降低随机性，确保结果更一致（0-2之间，越低越确定）
         stream=True
     )
     return response
