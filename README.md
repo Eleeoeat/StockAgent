@@ -1,15 +1,73 @@
 # 📊 AI 价值投资分析助手 (StockAgent)
 
-一个基于 Streamlit 的 A股股票价值投资分析工具，集成 DeepSeek AI、akshare 数据源和多维度估值模型。
+<div align="center">
 
-## 🖼️ 界面演示（以"贵州茅台"为例）
+![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Streamlit](https://img.shields.io/badge/streamlit-1.45.1-FF4B4B.svg)
+![DeepSeek](https://img.shields.io/badge/AI-DeepSeek-purple.svg)
 
-![Step 1 - 输入与财务摘要](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step1.png)
-![Step 2 - 核心指标与AI报告开头](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step2.png)
-![Step 3 - 多维度估值与趋势分析](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step3.png)
-![Step 4 - 风险与投资建议](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step4.png)
+一个基于 **Streamlit** 的 A股股票价值投资分析工具  
+集成 **DeepSeek AI**、**akshare** 数据源和多维度估值模型  
+助力投资者进行数据驱动的理性投资决策
 
-> 💡 报告包含：核心量化指标、四大估值模型对比、利弗莫尔趋势信号、股息策略分析、三大风险提示、明确操作建议。
+[快速开始](#-快速开始) • [功能特性](#-核心功能) • [界面演示](#-界面演示) • [更新日志](#️-最近更新)
+
+</div>
+
+---
+
+## 🖼️ 界面演示
+
+<div align="center">
+
+### 📈 完整分析流程展示（以"贵州茅台"为例）
+
+</div>
+
+<table>
+<tr>
+<td width="50%">
+
+**Step 1: 输入与财务摘要**  
+![输入与财务摘要](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step1.png)
+*展示财务数据获取和关键指标筛选*
+
+</td>
+<td width="50%">
+
+**Step 2: 核心指标与AI报告开头**  
+![核心指标与AI报告](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step2.png)
+*多维度估值模型对比分析*
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**Step 3: 多维度估值与趋势分析**  
+![估值与趋势](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step3.png)
+*利弗莫尔趋势信号+股息策略分析*
+
+</td>
+<td width="50%">
+
+**Step 4: 风险与投资建议**  
+![风险与建议](https://github.com/Eleeoeat/StockAgent/raw/main/screenshots/step4.png)
+*风险提示+明确的买入/持有/卖出建议*
+
+</td>
+</tr>
+</table>
+
+<div align="center">
+
+> 💡 **报告包含**：核心量化指标清单 • 四大估值模型对比 • 利弗莫尔趋势信号  
+> 股息策略分析 • 三大风险提示 • 明确操作建议
+
+</div>
+
+---
 
 ## 🚀 快速开始
 
@@ -98,26 +156,85 @@ Copy-Item .env.example .env
 如果你熟悉命令行，可以手动执行：
 
 ```bash
-# 步骤 1: 激活包含所需依赖的环境
-conda activate your_env_name  # 改为你的环境名
+<table>
+<tr>
+<td width="50%">
 
-# 步骤 2: 进入项目目录（项目文件夹在哪里就 cd 到哪里）
-cd StockAgent  # 如果你在项目父目录
-# 或者直接在项目文件夹里打开终端，跳过此步骤
+### 🤖 AI 模型选择
+- **DeepSeek-Chat (V3)**  
+  ⚡ 快速响应模式，适合日常快速分析  
+  ⏱️ 通常2-5秒生成完整报告
+  
+- **DeepSeek-Reasoner (R1)**  
+  🧠 深度推理模式，适合复杂投资决策  
+  🔍 逻辑链完整，分析更深入
 
-# 步骤 3: 启动应用
-streamlit run app_v2_enhanced.py
-```
+💡 可在侧边栏一键切换
 
-**运行成功后**：
-- 程序启动后，应用会在浏览器中自动打开（默认地址：http://localhost:8501）
-- 如果浏览器未自动打开，保持终端运行，手动在浏览器访问 http://localhost:8501
-- ⚠️ **注意**：必须保持程序运行，关闭终端则应用停止
+</td>
+<td width="50%">
+
+### 📈 数据获取能力
+- **实时行情数据**  
+  最新价、涨跌幅、市盈率、成交量
+  
+- **历史价格数据**  
+  52周最高/最低价（利弗莫尔趋势分析）
+  
+- **财务报表数据**  
+  近10年年报关键指标（ROE、净利润、毛利率等）
+  
+- **分红历史数据**  
+  近10年派息记录及股息率分析
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 💰 估值模型（多维对比）
+
+#### 1️⃣ PE倍数法
+- 基于市盈率估值
+- **A股标准**：低估<15 | 合理15-25 | 偏高25-35 | 高估>35
+
+#### 2️⃣ PEG模型  
+- 增长率调整市盈率
+- **自动提取**财报真实增长率
+- 标准：低估<1 | 合理1-1.5 | 偏高1.5-2 | 高估>2
+
+#### 3️⃣ 股息率模型
+- 基于分红稳定性和收益率
+- 历史分位数分析
+
+</td>
+<td width="50%">
+
+### 🎯 AI 分析维度
+
+#### 📋 核心量化指标
+ROE、毛利率、PE、PB、PEG、股息率、资产负债率等
+
+#### 📊 多维度估值对比
+综合 PE/PEG/股息率 等模型，给出估值结论
+
+#### 📈 利弗莫尔趋势信号
+价格位置分析（距52周高/低点的距离）
+
+#### 💵 股息策略分析
+分红吸引力、历史分位、稳定性评估
+
+#### ⚠️ 风险提示
+至少3条具体风险点，避免盲目乐观
+
+#### ✅ 投资建议
+明确的**买入/观望/卖出**操作建议
+
+</td>
+</tr>
+</table>
 
 ---
-
-#### 如何确认环境配置正确？
-
 在运行应用前，可以先验证环境：
 
 ```bash
@@ -171,14 +288,51 @@ python --version
 | `app_v2_enhanced.py` | 主应用程序 |
 | `test_data_fetch.py` | 数据源验证工具 |
 | `requirements.txt` | Python 依赖列表 |
-| `.env.example` | API Key 配置模板 |
-| `.env` | 本地环境变量（需自己创建，不上传） |
-| `.gitignore` | Git 忽略规则 |
-| `README.md` | 本文件 |
+```mermaid
+graph LR
+    A[启动应用] --> B[输入API Key]
+    B --> C[输入公司名称]
+    C --> D[点击分析按钮]
+    D --> E[获取实时数据]
+    E --> F[计算估值模型]
+    F --> G[AI深度分析]
+    G --> H[生成投资报告]
+    H --> I[制定投资决策]
+```
 
-## ⚙️ 最近更新
+### 详细步骤
 
-### v2.2.1 (2026-01-19) - 数据精简优化
+1. **启动应用**  
+   双击 `run.bat`（Windows）或运行 `streamlit run app_v2_enhanced.py`
+
+2. **配置 API Key**  
+   在侧边栏输入 DeepSeek API Key（或提前配置 `.env` 文件）
+
+3. **输入公司名称**  
+   输入框输入公司名称，如：`贵州茅台`、`宁德时代`、`比亚迪`等  
+   ⚠️ **注意**：输入的是公司名称，不是股票代码
+
+4. **选择AI模型**（可选）  
+   - DeepSeek-Chat (V3)：快速分析（推荐日常使用）
+   - DeepSeek-Reasoner (R1)：深度分析（推荐重大决策）
+
+5. **开始分析**  
+   点击"开始深度分析"按钮，应用会自动：
+   - 🔍 检索股票代码
+   - 📊 抓取财务数据
+   - 📈 获取价格和股息数据
+   - 🔢 计算多维度估值模型
+   - 🤖 调用 AI 生成分析报告
+
+6. **查看结果**  
+   - **数据面板**：52周价格、股息率、估值对比
+   - **财务摘要**：近10年关键财务指标
+   - **AI报告**：综合分析和投资建议
+
+7. **制定决策**  
+   基于报告的风险提示和投资建议，结合个人风险偏好做出决策
+
+---026-01-19) - 数据精简优化
 - ⚡ **优化数据引用量**
   - 财报数据从 20期 精简至 10期（最近2-3年数据更有参考价值）
   - 智能筛选关键指标：ROE、净利润、营收、毛利率、净利率、资产负债率、EPS、增长率等
@@ -202,13 +356,85 @@ python --version
   - 改进缺失值处理，只记录有效派息数据
   - 显示实际数据年限，数据不足时给出提示
 - 💡 **增强 AI 分析提示**
-  - 在 AI prompt 中说明新的估值标准
-  - 提示数据来源和年限信息
+  - 在 AI p与免责声明
 
-### v2.1.0 (2026-01-16) - 新增功能
-- ✨ **新增 AI 模型切换功能**
-  - 支持 DeepSeek-Chat (V3) 和 DeepSeek-Reasoner (R1) 切换
-  - 可根据分析需求选择快速响应或深度推理模式
+<div align="center">
+
+### ⚠️ 重要提示
+
+</div>
+
+```
+本工具仅供学习和参考使用，不构成任何投资建议。
+投资有风险，决策需谨慎。
+```
+
+**使用本工具前，请务必注意**：
+
+- 📖 **审阅公司财报**  
+  深入阅读年报、季报，了解公司真实经营状况
+
+- 🏭 **了解行业动态**  
+  关注行业政策、竞争格局、技术变革
+
+- 📊 **综合多方信息**  
+  结合多个分析工具和专业研报，避免单一信息源
+
+- 受到以下项目和理念的启发：
+
+### 📚 参考项目
+- **[ValueCell-ai/valuecell](https://github.com/ValueCell-ai/valuecell)**  
+  提供了核心数据获取思路、估值模型框架和AI分析流程
+
+### 💡 投资理念参考
+- **Benjamin Graham（本杰明·格雷厄姆）**  
+  价值投资之父，安全边际理论
+  [MIT License](LICENSE) 开源协议
+
+```
+MIT License - 你可以自由地使用、修改、分发本项目
+但需要保留原作者的版权声明
+```
+
+---
+
+## 📞 联系方式
+
+- **GitHub**: [@Eleeoeat](https://github.com/Eleeoeat)
+- **项目地址**: [StockAgent](https://github.com/Eleeoeat/StockAgent)
+- **问题反馈**: [Issues](https://github.com/Eleeoeat/StockAgent/issues)
+
+---
+
+<div align="center">
+
+**⭐ 如果这个项目对你有帮助，欢迎 Star ⭐**
+
+**最后更新**：2026年1月19日
+
+Made with ❤️ by [Eleeoeat](https://github.com/Eleeoeat)
+
+</div>（杰西·利弗莫尔）**  
+  趋势跟踪，价格位置分析
+
+### 🛠️ 技术栈
+- **Streamlit** - Web应用框架
+- **akshare** - A股数据源
+- **DeepSeek AI** - 智能分析引擎
+- **pandas & numpy** - 数据处理
+
+### 🌟 特别感谢
+感谢所有开源项目的贡献者，让价值投资工具的开发变得更加容易！
+
+---
+**AI分析的局限性**：
+- ✓ 可以：提供数据驱动的量化分析
+- ✓ 可以：识别历史财务趋势和估值水平
+- ✗ 不能：预测未来股价走势
+- ✗ 不能：考虑突发事件和政策变化
+- ✗ 不能：替代专业投资顾问的经验判断
+
+---析需求选择快速响应或深度推理模式
 
 ### v2.0.1 (2026-01-16) - Bug 修复
 - ✅ 修复近一年价格范围获取失败（中文列名编码问题）
