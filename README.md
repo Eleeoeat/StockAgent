@@ -101,16 +101,18 @@ Copy-Item .env.example .env
 # 步骤 1: 激活包含所需依赖的环境
 conda activate your_env_name  # 改为你的环境名
 
-# 步骤 2: 进入项目目录
-cd path/to/MyStockAgent
+# 步骤 2: 进入项目目录（项目文件夹在哪里就 cd 到哪里）
+cd StockAgent  # 如果你在项目父目录
+# 或者直接在项目文件夹里打开终端，跳过此步骤
 
 # 步骤 3: 启动应用
 streamlit run app_v2_enhanced.py
 ```
 
-**首次运行后**：
-- 应用会在浏览器中自动打开（默认地址：http://localhost:8501）
-- 如果浏览器未自动打开，手动访问上述地址即可
+**运行成功后**：
+- 程序启动后，应用会在浏览器中自动打开（默认地址：http://localhost:8501）
+- 如果浏览器未自动打开，保持终端运行，手动在浏览器访问 http://localhost:8501
+- ⚠️ **注意**：必须保持程序运行，关闭终端则应用停止
 
 ---
 
@@ -223,13 +225,13 @@ python --version
 ```bash
 # 克隆项目
 git clone https://github.com/Eleeoeat/StockAgent.git
-cd StockAgent
+cd StockAgent  # 进入项目文件夹
 
-# 安装依赖
+# 安装依赖（确保已激活正确的 Python 环境）
 pip install -r requirements.txt
 
 # 运行应用
-python run.py
+python run.py  # 或双击 run.py / run.bat
 ```
 
 ## 🙏 致谢与参考
