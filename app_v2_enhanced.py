@@ -525,9 +525,10 @@ if st.button("开始深度分析"):
                 
                 report_placeholder.markdown(full_content)
                 status.update(label="✅ 分析完成！", state="complete")
-                
-                # 显示给AI的简化数据（必须在 status 外使用 expander）
-                with st.expander("🤖 查看 AI 分析用数据（已精简）"):
-                    st.dataframe(finance_for_ai)
             else:
                 st.error("❌ 未找到匹配的股票")
+        
+        # 显示给AI的简化数据（必须在 status 外使用 expander）
+        if 'finance_for_ai' in locals():
+            with st.expander("🤖 查看 AI 分析用数据（已精简）"):
+                st.dataframe(finance_for_ai)
