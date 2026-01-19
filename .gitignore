@@ -47,4 +47,4 @@ Thumbs.db
 # 本地配置
 .env
 .env.local
-*.local
+run_local.bat

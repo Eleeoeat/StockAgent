@@ -58,14 +58,84 @@ Copy-Item .env.example .env
 
 ### 3. 运行应用
 
-**方式一：双击启动（推荐）** ⭐
-- Windows: 双击 `run.bat` 文件
-- 或双击 `run.py` 文件
+#### 方式一：使用启动脚本（推荐）⭐
 
-**方式二：命令行启动**
+**步骤 1：配置 Conda 环境名称**
+
+1. 用文本编辑器（如 VSCode、记事本）打开 `run.bat` 文件
+2. 找到第 5 行：
+   ```bat
+   set ENV_NAME=myenv
+   ```
+3. 将 `myenv` 改为你实际的 conda 环境名称，例如：
+   ```bat
+   set ENV_NAME=data_work     # 如果你的环境名是 data_work
+   set ENV_NAME=stock_analysis # 如果你的环境名是 stock_analysis
+   ```
+4. 保存文件（Ctrl+S）
+
+**步骤 2：运行应用**
+
+- **Windows 用户**：直接双击 `run.bat` 文件
+  - 脚本会自动激活指定的 conda 环境
+  - 自动启动 Streamlit 应用
+  - 浏览器会自动打开应用界面
+
+- **或者**：双击 `run.py` 文件（需提前手动激活环境）
+
+**可能遇到的问题**：
+- 如果提示 `[ERROR] Failed to activate environment`，请检查：
+  1. Anaconda/Miniconda 是否已正确安装
+  2. 环境名称是否拼写正确（使用 `conda env list` 查看所有环境）
+  3. 是否在正确的目录运行脚本
+
+💡 **提示**：由于 Windows 批处理文件的编码限制，脚本提示信息使用英文显示
+
+---
+
+#### 方式二：命令行启动
+
+如果你熟悉命令行，可以手动执行：
+
 ```bash
+# 步骤 1: 激活包含所需依赖的环境
+conda activate your_env_name  # 改为你的环境名
+
+# 步骤 2: 进入项目目录
+cd path/to/MyStockAgent
+
+# 步骤 3: 启动应用
 streamlit run app_v2_enhanced.py
 ```
+
+**首次运行后**：
+- 应用会在浏览器中自动打开（默认地址：http://localhost:8501）
+- 如果浏览器未自动打开，手动访问上述地址即可
+
+---
+
+#### 如何确认环境配置正确？
+
+在运行应用前，可以先验证环境：
+
+```bash
+# 1. 查看所有 conda 环境
+conda env list
+
+# 2. 激活目标环境
+conda activate your_env_name
+
+# 3. 检查已安装的包
+pip list | findstr "streamlit akshare openai"
+
+# 4. 验证 Python 版本（建议 3.8+）
+python --version
+```
+
+⚠️ **重要提醒**：
+- 必须在安装了所有依赖（见 `requirements.txt`）的 Python 环境中运行
+- 如果提示缺少模块，请返回第 1 步重新安装依赖
+- 确保 `.env` 文件已配置 DeepSeek API Key
 
 ## 📊 核心功能
 
