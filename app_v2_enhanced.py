@@ -428,11 +428,38 @@ if st.button("开始深度分析"):
                 finance_df = ak.stock_financial_abstract_ths(symbol=target_code, indicator="主要指标")
                 date_col = finance_df.columns[0]
                 finance_df = finance_df.sort_values(by=date_col, ascending=False)
-                finance_recent = finance_df.head(20)
-                core_data_for_ai = finance_recent.to_string()
                 
-                st.subheader(f"{target_name} 财务摘要")
-                st.dataframe(finance_recent)
+                # 优化：减少数据量从20条到10条，且筛选关键指标
+                finance_recent = finance_df.head(10)
+                
+                # 筛选关键指标列（如果存在）
+                key_indicators = [date_col]  # 先加入日期列
+                possible_indicators = [
+                    'ROE', '净资产收益率', '净利润', '营业收入', '营业总收入',
+                    '毛利率', '净利率', '资产负债率', '每股收益', 'EPS',
+                    '净利润增长率', '营收增长率', '流动比率'
+                ]
+                
+                for indicator in possible_indicators:
+                    for col in finance_df.columns:
+                        if indicator in col and col not in key_indicators:
+                            key_indicators.append(col)
+                            break
+                
+                # 如果有关键指标，只使用这些；否则使用全部
+                if len(key_indicators) > 1:
+                    finance_for_ai = finance_recent[key_indicators]
+                else:
+                    finance_for_ai = finance_recent
+                
+                core_data_for_ai = finance_for_ai.to_string()
+                
+                st.subheader(f"{target_name} 财务摘要（最近10期）")
+                st.dataframe(finance_recent)  # 界面显示完整数据
+                
+                # 显示给AI的简化数据（可收起）
+                with st.expander("🤖 查看 AI 分析用数据（已精简）"):
+                    st.dataframe(finance_for_ai)
                 
                 # 第三步：获取额外数据
                 st.write("📊 正在获取价格和股息数据...")
