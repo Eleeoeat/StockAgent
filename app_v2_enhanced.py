@@ -122,7 +122,7 @@ def get_dividend_data(stock_code):
                 if '记录日' in col or '除权日' in col:
                     result["record_date"] = latest_dividend[col]
             
-            # 提取历史派息数据用于分位分析
+            # 提取历史派息数据用于分位分析（扩展到20年）
             dividend_values = []
             for idx, row in dividend_df.iterrows():
                 try:
@@ -131,22 +131,27 @@ def get_dividend_data(stock_code):
                             val = row[col]
                             # 检查是否为数字类型
                             if isinstance(val, (int, float)) and not isinstance(val, bool):
-                                dividend_values.append(float(val))
+                                if val > 0:  # 只记录有效派息
+                                    dividend_values.append(float(val))
                                 break
                             elif val is not None:
                                 # 尝试转换
                                 try:
                                     str_val = str(val).replace('元', '').strip()
                                     if str_val and str_val.replace('.', '', 1).isdigit():
-                                        dividend_values.append(float(str_val))
+                                        float_val = float(str_val)
+                                        if float_val > 0:  # 只记录有效派息
+                                            dividend_values.append(float_val)
                                         break
                                 except (ValueError, TypeError):
                                     pass
                 except:
                     pass
             
-            if len(dividend_values) >= 3:
-                result["history"] = dividend_values[:10]
+            # 扩展到20年历史数据（如果数据不足3年，也保留以便提示用户）
+            if len(dividend_values) >= 1:
+                result["history"] = dividend_values[:20]  # 最多保留20年
+                result["history_years"] = len(result["history"])  # 记录实际年数
                 
             return result
     except Exception as e:
@@ -195,13 +200,28 @@ def analyze_dividend_percentile(dividend_history, current_yield):
 # ============================================================================
 
 def estimate_by_pe_model(current_pe, current_price):
-    """PE 倍数估值"""
+    """PE 倍数估值（调整阈值适配A股市场）"""
+    # A股市场PE阈值：参考历史数据和价值投资理念
+    # 低估：<15（格雷厄姆标准）
+    # 合理：15-25（巴菲特可接受范围）
+    # 偏高：25-35（成长股可接受）
+    # 高估：>35（需要高成长支撑）
+    if current_pe < 15:
+        assessment = "低估"
+    elif current_pe < 25:
+        assessment = "合理"
+    elif current_pe < 35:
+        assessment = "偏高"
+    else:
+        assessment = "高估"
+    
     return {
         "model": "PE倍数法",
         "current_pe": current_pe,
-        "assessment": "低估" if current_pe < 12 else "合理" if current_pe < 20 else "高估",
-        "industry_avg": 15,
-        "premium": ((current_pe - 15) / 15 * 100) if current_pe > 0 else 0
+        "assessment": assessment,
+        "reference_range": "低估<15 | 合理15-25 | 偏高25-35 | 高估>35",
+        "market_avg": 25,  # A股市场平均PE约25
+        "premium": ((current_pe - 25) / 25 * 100) if current_pe > 0 else 0
     }
 
 def estimate_by_pb_model(current_price, book_value_per_share=None):
@@ -232,16 +252,56 @@ def estimate_by_roe_model(roe, eps, current_price):
         "discount_or_premium": ((current_price - reasonable_price) / reasonable_price * 100)
     }
 
-def estimate_by_peg_model(current_pe, growth_rate=10):
-    """PEG 估值"""
-    if current_pe <= 0 or growth_rate <= 0:
+def estimate_by_peg_model(current_pe, growth_rate=None, finance_df=None):
+    """PEG 估值（尝试从财务数据提取真实增长率）"""
+    # 尝试从财务数据计算真实净利润增长率
+    calculated_growth = None
+    if finance_df is not None and not finance_df.empty:
+        try:
+            # 查找净利润相关列
+            for col in finance_df.columns:
+                if '净利润' in col and '增长率' in col:
+                    # 获取最近的增长率数据
+                    growth_val = finance_df.iloc[0][col]
+                    if isinstance(growth_val, (int, float)):
+                        calculated_growth = abs(float(growth_val))  # 取绝对值
+                        break
+                    elif growth_val is not None:
+                        try:
+                            # 去除%符号并转换
+                            str_val = str(growth_val).replace('%', '').strip()
+                            calculated_growth = abs(float(str_val))
+                            break
+                        except:
+                            pass
+        except:
+            pass
+    
+    # 使用计算出的增长率，如果没有则使用传入的growth_rate，都没有则默认10%
+    final_growth = calculated_growth if calculated_growth and calculated_growth > 0 else (growth_rate if growth_rate else 10)
+    
+    if current_pe <= 0 or final_growth <= 0:
         return None
     
-    peg = current_pe / growth_rate
+    peg = current_pe / final_growth
+    
+    # PEG判断标准：<1优秀，1-1.5合理，1.5-2偏高，>2高估
+    if peg < 1:
+        assessment = "低估"
+    elif peg < 1.5:
+        assessment = "合理"
+    elif peg < 2:
+        assessment = "偏高"
+    else:
+        assessment = "高估"
+    
     return {
         "model": "PEG模型",
         "peg": peg,
-        "assessment": "低估" if peg < 0.8 else "合理" if peg < 1.5 else "高估",
+        "growth_rate": final_growth,
+        "growth_source": "财报数据" if calculated_growth else "预估值",
+        "assessment": assessment,
+        "reference": "低估<1 | 合理1-1.5 | 偏高1.5-2 | 高估>2"
     }
 
 # ============================================================================
@@ -253,11 +313,18 @@ def call_deepseek_agent(api_key, stock_name, data_string, current_date, current_
     """调用 DeepSeek 进行 AI 分析"""
     client = OpenAI(api_key=api_key, base_url=base_url)
     
-    # 构建估值信息
+    # 构建估值信息（包含详细标准）
     valuation_info = "【多维度估值模型结论】\n"
     for model in valuation_models:
         if model:
-            valuation_info += f"- {model['model']}: {model['assessment']}\n"
+            assessment = model['assessment']
+            if model['model'] == "PE倍数法":
+                valuation_info += f"- PE倍数法: {assessment} (当前PE={model['current_pe']:.2f}, 参考: {model['reference_range']})\n"
+            elif model['model'] == "PEG模型":
+                growth_source = model.get('growth_source', '预估值')
+                valuation_info += f"- PEG模型: {assessment} (PEG={model['peg']:.2f}, 增长率={model['growth_rate']:.1f}% [{growth_source}], 参考: {model['reference']})\n"
+            else:
+                valuation_info += f"- {model['model']}: {assessment}\n"
     
     # 安全处理 None 值
     high_52w = price_range_data.get('high_52w') if price_range_data else None
@@ -302,14 +369,19 @@ def call_deepseek_agent(api_key, stock_name, data_string, current_date, current_
     {dividend_percentile_info}
     {valuation_info}
     
+    【估值标准说明】
+    - PE估值: A股市场调整后标准 (低估<15 | 合理15-25 | 偏高25-35 | 高估>35)
+    - PEG估值: 基于真实财报增长率或预估值 (低估<1 | 合理1-1.5 | 偏高1.5-2 | 高估>2)
+    - 股息数据: 最多包含近20年历史数据，数据不足时会提示
+    
     【财务数据】
     {data_string}
     
     【报告要求】
     1. 给出【核心量化指标清单】：ROE、毛利率、PE、PB、PEG、股息率等
-    2. 给出【多维度估值对比】：对比 PE/PB/ROE/DCF/股息率 模型
+    2. 给出【多维度估值对比】：综合分析 PE/PEG/股息率 等模型，解释估值结论合理性
     3. 给出【利弗莫尔趋势信号】：价格位置、高低点距离
-    4. 给出【股息策略分析】：分红吸引力、历史分位
+    4. 给出【股息策略分析】：分红吸引力、历史分位（注意数据年限）
     5. 给出【风险与不买入理由】：至少 3 条
     6. 给出【投资建议】：买入/观望/卖出
     7. 用具体数字论证，严禁空泛形容词
@@ -371,7 +443,7 @@ if st.button("开始深度分析"):
                 st.write("🔢 正在计算多维度估值模型...")
                 valuation_models = [
                     estimate_by_pe_model(current_pe, current_price),
-                    estimate_by_peg_model(current_pe, 10),
+                    estimate_by_peg_model(current_pe, growth_rate=None, finance_df=finance_recent),  # 传入财务数据
                 ]
                 
                 # 显示数据面板
@@ -388,8 +460,12 @@ if st.button("开始深度分析"):
                     if dividend_data.get("dividend_per_share"):
                         div_yield = calculate_dividend_yield(dividend_data["dividend_per_share"], current_price)
                         st.metric("每股派息", f"{dividend_data['dividend_per_share']:.2f} 元")
-                        st.metric("当前股息率", f"{div_yield:.2f}%")
-                        st.metric("历史派息年数", len(dividend_data.get("history", [])))
+                        if div_yield:
+                            st.metric("当前股息率", f"{div_yield:.2f}%")
+                        history_years = dividend_data.get("history_years", len(dividend_data.get("history", [])))
+                        st.metric("历史数据", f"{history_years} 年" if history_years else "数据不足")
+                    else:
+                        st.info("⚠️ 暂无分红数据")
                 
                 with col3:
                     st.subheader("📊 估值对比")
