@@ -457,7 +457,7 @@ Made with ❤️ by [Eleeoeat](https://github.com/Eleeoeat)
 ## 📝 使用流程
 
 1. 启动应用后，在侧边栏输入 DeepSeek API Key
-2. 输入股票代码（如 600519 表示贵州茅台）
+2. 输入公司名称（如"贵州茅台"、"宁德时代"）
 3. 应用自动获取并展示：
    - 价格范围卡片
    - 实时市场数据
