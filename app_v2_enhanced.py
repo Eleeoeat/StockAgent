@@ -122,7 +122,7 @@ def get_dividend_data(stock_code):
                 if '记录日' in col or '除权日' in col:
                     result["record_date"] = latest_dividend[col]
             
-            # 提取历史派息数据用于分位分析（扩展到20年）
+            # 提取历史派息数据用于分位分析（与财报数据保持10年）
             dividend_values = []
             for idx, row in dividend_df.iterrows():
                 try:
@@ -148,9 +148,9 @@ def get_dividend_data(stock_code):
                 except:
                     pass
             
-            # 扩展到20年历史数据（如果数据不足3年，也保留以便提示用户）
+            # 保留10年历史数据（与财报数据一致）
             if len(dividend_values) >= 1:
-                result["history"] = dividend_values[:20]  # 最多保留20年
+                result["history"] = dividend_values[:10]  # 最多保留10年
                 result["history_years"] = len(result["history"])  # 记录实际年数
                 
             return result
@@ -372,7 +372,7 @@ def call_deepseek_agent(api_key, stock_name, data_string, current_date, current_
     【估值标准说明】
     - PE估值: A股市场调整后标准 (低估<15 | 合理15-25 | 偏高25-35 | 高估>35)
     - PEG估值: 基于真实财报增长率或预估值 (低估<1 | 合理1-1.5 | 偏高1.5-2 | 高估>2)
-    - 股息数据: 最多包含近20年历史数据，数据不足时会提示
+    - 股息数据: 最多包含近10年历史数据（与财报周期一致），数据不足时会提示
     
     【财务数据】
     {data_string}
