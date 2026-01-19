@@ -454,6 +454,10 @@ if st.button("开始深度分析"):
                 
                 core_data_for_ai = finance_for_ai.to_string()
                 
+                # 显示财务摘要（在 status 内可以使用普通组件）
+                st.subheader(f"{target_name} 财务摘要（最近10期）")
+                st.dataframe(finance_recent)
+                
                 # 第三步：获取额外数据
                 st.write("📊 正在获取价格和股息数据...")
                 price_range_data = get_52week_price_range(target_code)
@@ -521,14 +525,9 @@ if st.button("开始深度分析"):
                 
                 report_placeholder.markdown(full_content)
                 status.update(label="✅ 分析完成！", state="complete")
+                
+                # 显示给AI的简化数据（必须在 status 外使用 expander）
+                with st.expander("🤖 查看 AI 分析用数据（已精简）"):
+                    st.dataframe(finance_for_ai)
             else:
                 st.error("❌ 未找到匹配的股票")
-        
-        # 在 status 完成后显示财务数据（避免嵌套问题）
-        if 'target_name' in locals() and 'finance_recent' in locals():
-            st.subheader(f"{target_name} 财务摘要（最近10期）")
-            st.dataframe(finance_recent)
-            
-            # 显示给AI的简化数据（可收起）
-            with st.expander("🤖 查看 AI 分析用数据（已精简）"):
-                st.dataframe(finance_for_ai)
